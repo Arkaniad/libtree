@@ -18,8 +18,10 @@ int main(int argc, const char *argv[]){
 }
 
 void print_tree(btree_node *current){
+  btree_node node;
+  node = (btree_node) *current;
   printf("Printing tree starting at root (node %d)\n", (*current).num);
-  printf("Node's leaves: (%d(%d) < > %d(%d))\n", (*current).left, *((*current).left).num, (*current).right, *((*current).right).num);
+  printf("Node's leaves: (%d(%d) < > %d(%d))\n", (*current).left, node.num, (*current).right, node.num);
   if((*current).left != NULL){
     printf("Descending left and printing.\n");
     print_tree((*current).left);

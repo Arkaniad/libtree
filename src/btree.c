@@ -1,77 +1,101 @@
 #include <stdio.h>
+#include <stdlib.h>
 #include "btree.h"
 #define DEBUG
 
 int main(int argc, const char *argv[]){
-  btree_node root = *btree_node_newnum(5);
-  btree_node left = *btree_node_newnum(4);
-  btree_node left_left = *btree_node_newnum(3);
-  btree_node right = *btree_node_newnum(7);
-  btree_node right_right = *btree_node_newnum(8);
-  btree_node right_left = *btree_node_newnum(6);
-  btree_push(&root, &left); 
-  btree_push(&root, &left_left);
-  btree_push(&root, &right);
-  btree_push(&root, &right_right);
-  btree_push(&root, &right_left);
-  print_tree(&root);
 }
 
-void print_tree(btree_node *current){
-  btree_node node;
-  node = (btree_node) *current;
-  printf("Printing tree starting at root (node %d)\n", (*current).num);
-  printf("Node's leaves: (%d(%d) < > %d(%d))\n", (*current).left, node.num, (*current).right, node.num);
-  if((*current).left != NULL){
-    printf("Descending left and printing.\n");
-    print_tree((*current).left);
+// Walk from the given node and print contents
+void print_from_node(btree_node *current){
+  btree_node *left;
+  btree_node *right;
+  left = (btree_node*)current->left;
+  right = (btree_node*)current->right;
+  printf("   At node %d (%d)\n", current->num, current);
+  if(left != NULL){
+    printf("<< Node %d has left child at %d\n", current->num, left);
+    print_from_node(left);
   }
-  if((*current).right != NULL){
-    printf("Descending right and printing.\n");
-    print_tree((*current).right);
+  if(right != NULL){
+    printf(">> Node %d has right child at %d\n", current->num, right);
+    print_from_node(right);
   }
 }
 
+// Print an entire btree
+void print_tree(btree *tree){
+  btree_node *root = tree->root;
+  print_from_node(root);
+}
+
+// Create an empty btree_node
 btree_node *btree_node_new(){
-  btree_node ret;
-  ret.num = NULL;
-  ret.left = NULL;
-  ret.right = NULL;
-  printf("Initialized blank node at %d\n", &ret);
-  return &ret;
+  btree_node *ret;
+  ret = (btree_node*) malloc(sizeof(btree_node));
+  ret->num   = 0;
+  ret->left  = (struct btree_node*) NULL;
+  ret->right = (struct btree_node*) NULL;
+  printf("Initialized blank node at %d\n", ret);
+  return ret;
 }
 
+// Create a new btree_node with key of num
 btree_node *btree_node_newnum(int num){
-  btree_node ret;
-  ret.num = num;
-  ret.left = NULL;
-  ret.right = NULL;
-  printf("Initialized node at %d with num %d\n", &ret, ret.num);
-  return &ret;
+  btree_node *ret;
+  ret = (btree_node*) malloc(sizeof(btree_node));
+  ret->num   = num;
+  ret->left  = (struct btree_node*) NULL;
+  ret->right = (struct btree_node*) NULL;
+  printf("Initialized node at %d with num %d\n", ret, ret->num);
+  return ret;
 }
 
-void btree_push(btree_node *top, btree_node *add) {
-  printf("Adding node %d to tree with root at node %d\n", (*add).num, (*top).num);
-  if((*add).num < (*top).num) {
-    printf("Node %d will go on the left of node %d\n", (*add).num, (*top).num);
-    if((*top).left != NULL){
-      printf("Node %d will traverse down left.\n", (*add).num);
-      btree_push((*top).left, add);
+// Create a new btree
+btree *btree_new(){
+  btree ret;
+  ret.root = NULL;
+  printf("Initialized empty tree at %d", &ret);
+}
+
+// Set the rot of a btree
+void btree_set_root(btree *tree, btree_node *root){
+  tree->root = root;
+}
+
+// Get the root of a btree
+btree_node *btree_get_root(btree *tree){
+  return tree->root;
+}
+
+// Add to the given node the node given at the end
+void btree_push(btree_node *root, btree_node *node) {
+  printf("Adding node %d to tree with root at node %d\n", node->num, root->num);
+  if(node->num < root->num) {
+    printf("Node %d will go on the left of node %d\n", node->num, root->num);
+    if(root->left != NULL){
+      printf("Node %d will traverse down left.\n", node->num);
+      btree_push((btree_node*)root->left, node);
     } else {
-      printf("Adding node %d to left of node %d\n", (*add).num, (*top).num);
-      (*top).left = add;
+      printf("Adding node %d to left of node %d\n", node->num, root->num);
+      root->left = (struct btree_node*) node;
     }
-  } else if((*add).num > (*top).num) {
-    printf("Node %d will go on the right of node %d\n", (*add).num, (*top).num);
-    if((*top).right != NULL){
-      printf("Node %d will traverse down right.\n", (*add).num);
-      btree_push((*top).right, add); 
+  } else if(node->num > root->num) {
+    printf("Node %d will go on the right of node %d\n", node->num, root->num);
+    if(root->right != NULL){
+      printf("Node %d will traverse down right.\n", node->num);
+      btree_push((btree_node*)root->right, node); 
   } else {
-      printf("Adding node %d to right of node %d\n", (*add).num, (*top).num);
-      (*top).right = add;
+      printf("Adding node %d to right of node %d\n", node->num, root->num);
+      root->right = (struct btree_node*) node;
     }
   } else {
     printf("Leaf was not added, duplicate entry.\n");
   }
   
+}
+
+// Add the node pointed to by *node to the tree pointed to by *tree
+void btree_push_tree(btree *tree, btree_node *node){
+  btree_push(tree->root, node);
 }

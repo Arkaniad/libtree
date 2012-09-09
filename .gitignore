@@ -13,3 +13,6 @@
 
 # Default output file.
 bin/btree_test
+
+# Gedit temp files
+*.*~

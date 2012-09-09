@@ -6,7 +6,7 @@ mkdir -p bin
 mkdir -p lib
 cd `pwd`/src/
 echo ">>>> Building the test to bin/libtree_test"
-gcc -g btree.c node.c tree.c debug.c -o ../bin/btree_test
+gcc -g test.c node.c tree.c debug.c -o ../bin/btree_test
 echo ">>>> Building the shared library to lib/libtree.so.1"
 gcc -c -fPIC node.c -o ../lib/node.o
 gcc -c -fPIC tree.c -o ../lib/tree.o

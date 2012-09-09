@@ -1,6 +1,9 @@
 #!/bin/bash
 VERSION=0.1
 echo ">>>> Building libtree ${VERSION}"
+echo ">>>> Verifying directory structure"
+mkdir -p bin
+mkdir -p lib
 cd `pwd`/src/
 echo ">>>> Building the test to bin/libtree_test"
 gcc -g btree.c node.c tree.c debug.c -o ../bin/btree_test

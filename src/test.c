@@ -5,8 +5,13 @@
 
 // Test libtree stuff
 int main(int argc, const char *argv[]){
-  btree *tree = btree_new();
-  btree_node *root = btree_node_newnum(5);
+  printf(">>>> Starting libtree tests\n");
+  btree *tree;
+  btree_node *root;
+  
+  tree = btree_new();
+  root = btree_node_newnum(5);
+  
   btree_set_root(tree, root);
 }
 

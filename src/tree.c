@@ -1,11 +1,13 @@
 #include <stdio.h>
+#include <stdlib.h>
 #include "libtree.h"
 
 // Create a new btree
 btree *btree_new(){
-  btree ret;
-  ret.root = NULL;
-  printf("Initialized empty tree at %d", &ret);
+  btree *ret;
+  ret = (btree*) malloc(sizeof(btree));
+  ret->root = NULL;
+  printf("Initialized empty tree at %d\n", ret);
 }
 
 // Set the rot of a btree

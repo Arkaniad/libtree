@@ -8,6 +8,7 @@ btree *btree_new(){
   ret = (btree*) malloc(sizeof(btree));
   ret->root = NULL;
   printf("Initialized empty tree at %d\n", ret);
+  return ret;
 }
 
 // Set the rot of a btree

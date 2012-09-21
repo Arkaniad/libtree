@@ -25,3 +25,26 @@ btree_node *btree_get_root(btree *tree){
 void btree_push_tree(btree *tree, btree_node *node){
   btree_push(tree->root, node);
 }
+
+// Get a specific node from a tree
+btree_node *btree_get_node(btree *tree, int num){
+  btree_node *root;
+  root = tree->root;
+  if(root->num == num){
+    return root;
+  } else {
+    if(root->num < num){
+      if(root->right != NULL) {
+        return btree_get_node((btree_node *)root->right, num);
+      } else {
+        return (btree_node*) NULL;
+      }
+    } else {
+      if(root->left != NULL) {
+        return btree_get_node(root->left, num);
+      } else {
+        return (btree_node*) NULL;
+      }
+    }
+  }
+}
